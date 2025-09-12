@@ -151,6 +151,56 @@ print("remain:", files)
 
 
 # 函数  
+def() 定义函数  
+retun 返回函数的运算结果  
+参数设置 忽略参数名，按顺序传参，如有参数名，可打乱顺序按参数名穿参  
+
+
+全局变量与局部变量  
+变量	特点  
+全局 global	函数里外都能用 （公用）  
+局部 local	仅在函数内有用 （私有）  
+
+
+def modify_name():  
+    filename = "f1.txt"  
+    print("local filename:", filename)  
+modify_name()  
+print("global filename:", filename) #这里会报错  
+
+
+那么如果这个 filename 是公用的，每一个函数都能获取到的，我们怎么定义呢？ 其实你就把 filename 拎出来，放到外面就好了。  
+filename = "f1.txt"  
+def modify_name():  
+    print("local filename:", filename)  
+modify_name()  
+print("global filename:", filename)  
+
+
+自私的 modify_name() 想自己在内部搞一套标准， 你外面有啥不要紧，如果我自己也搞一个一样的东西，那我就觉得自己这个更重要，就不看外面的东西了。所以local的filename就是 modify_name() 自己那一套。  
+filename = "f1.txt"  
+def modify_name():  
+    filename = "f2.txt"  
+    print("local filename:", filename)  
+modify_name()  
+print("global filename:", filename)  
+
+
+存在另一种情况，就是允许内部来修改外部的值。为了办这件事，modify_name() 必须先向外面打一个申请报告，向外面申请自己要去修改公用的 filename。  
+filename = "f1.txt"  
+def modify_name():  
+    global filename  # 提出申请  
+    filename = "f2.txt"  
+    print("local filename:", filename)  
+modify_name()  
+print("global filename:", filename)   
+
+
+
+
+
+
+
 class类  
 模块  
 读写文件  
