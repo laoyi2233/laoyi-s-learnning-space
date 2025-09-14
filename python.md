@@ -686,18 +686,55 @@ for file in match:
         ", day:", file.group("d"))  
 
 
+多模式匹配  
+re.I  忽略大小写  
+ptn, string = r"r[ua]n", "I Ran to you"  
+print("without re.I:", re.search(ptn, string))  
+print("with re.I:", re.search(ptn, string, flags=re.I))  
 
 
+我们想在每行文字的开头匹配特定字符，如果用 ^ran 固定样式开头，我是匹配不到第二行的 ran to you 的，所以我们得加上一个 re.M flag。 注意我们提到过的 re.search() 和 re.match() 有一丢丢不一样，re.match() 是不管你有没有 re.M flag，我的匹配都是按照最头头上开始匹配的。 所以在下面的实验中，re.match() 匹配不到任何东西。   
+ptn = r"^ran"  
+string = """I  
+ran to you"""  
+print("without re.M:", re.search(ptn, string))  
+print("with re.M:", re.search(ptn, string, flags=re.M))  
+print("with re.M and match:", re.match(ptn, string, flags=re.M))  
 
 
+如果你想用多种 flags，也是可以的，比如我想同时用 re.M, re.I，你只需要这样书写re.M|re.I：   
+ptn = r"^ran"  
+string = """I  
+Ran to you"""  
+print("with re.M and re.I:", re.search(ptn, string, flags=re.M|re.I))  
 
 
+使用多模式匹配的方式是多加一个参数flags=re.xx
 
 
-
-
+更快的执行  
+要重复判断一个正则表达式，我们通常不会直接在 re.search(ptn) 这里里面写 ptn，而是在外面先定义好，解析好一个正则 pattern，然后直接用这个 pattern 循环执行查找。 这样可以更有效率，比如你要重复查找 100 万次，我们先 compile 正则再查找能节省可观的时间。   
+import time  
+n = 1000000  
+#不提前 compile  
+t0 = time.time()  
+for _ in range(n):  
+    re.search(r"ran", "I ran to you")  
+t1 = time.time()  
+print("不提前 compile 运行时间：", t1-t0)  
+#先做 compile  
+ptn = re.compile(r"ran")  
+for _ in range(n):  
+    ptn.search("I ran to you")  
+print("提前 compile 运行时间：", time.time()-t1)  
 
 
 # pickle/json序列化  
+
+
+
+
+
+
 控制异常try—except  
 单元测试  
