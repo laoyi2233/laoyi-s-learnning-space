@@ -509,6 +509,181 @@ os.path.join  拼接路径
 
 
 # 正则表达式
+不用正则的判断  
+re.compile()  
+ptn.search()  
+
+
+import re  
+ptn = re.compile(r"\w+?@\w+?.com")  
+matched = ptn.search(mofan@mofanpy.com)  
+print("mofan@mofanpy.com is a valid email:", matched)  
+matched = ptn.search("mofan@mofanpy+com")  
+print("mofan@mofanpy+com is a valid email:", matched)   
+
+
+span = (a,b)的含义，这表示我们要找的pattern在原始字符中是从a开始，b结束。  
+
+
+match = re.search(r"run","i run to you")  
+print(match)  
+print(match.group())  
+
+
+#运行结果  
+<re.Match object; span=(2, 5), match='run'>  #注意空格也算作字符内，且第一个字符的序号为0，左闭右开  
+run  
+
+
+### 满足多种条件   
+1.|或  
+re.search(r"run|ran","i ran to you")  
+#这个|表示两个都可以检验，但只检验第一次在文本中出现的字符  
+
+
+2.[]  
+re.research(r"r[au]n","i ran to you")  
+#在[]内，只要是出现的字符都可以检验，不需要考虑到顺序  
+re.search(r"[\u4e00-\u9fa5！？。，￥【】「」]+", "我爱莫烦。莫烦棒！")  
+只有在找到‘。’后，才会继续找后面的中文，也就是说re.search匹配的方式其实是从第一个字符开始遍历到最后一个字符，当运行一次，第一次找到到第一次没找到，产生了一个区间后，就停止遍历，也就是说它指挥产生一个区间，也就是说只会出现一个span=(a,b)。  
+
+
+3.|+()
+re.search(r"f(ou|i)nd","i find you")  
+re.search(r"f(ou|i)nd", "I found you")  
+#此时在f之后，nd之前的字母既可以是ou，也可以是i。  
+
+
+### 通用匹配方式
+字符匹配  
+\d	任何数字	[0-9]    
+\D	非数字字符	  [^0-9]   
+\w	任何大小写字母,数字和下划线_	[a-zA-Z0-9_]   
+\W	非字母、数字、下划线_  [^\w]  	  
+. 	匹配任何字符 (除了 \n)	  
+
+
+空白字符  
+\s	任何空白字符	[ \t\n\r\f\v]  
+\S	空白字符以外的	[^\s]    
+
+
+边界匹配(匹配=找)  
+\b	匹配一个单词边界	比如 er\b 可以匹配 never 中的 er，但不能匹配 verb 中的 er  
+\B	匹配非单词边界	比如 er\B 能匹配 verb 中的 er，但不能匹配 never 中的 er     
+^	匹配一行的开头，在 re.M 下，每行开头都匹配	  
+$	匹配一行的结尾，在 re.M 下，每行结尾都匹配	  
+\A	匹配最开始，不受多行影响，在 re.M 下，也从文本最开始	  
+\B	匹配最结尾，不受多行影响，在 re.M 下，也从文本最结尾	  
+
+
+量词
+?	前面的模式可有可无，0次或1次	  
+*	前一个字符0次或多次	    
++	前一个字符1次或多次	   
+{n,m}	重复 n 至 m 次	   
+{n}	重复 n 次
+{n,}  至少n次  
++?	非贪婪，最小方式匹配 +	   
+*?	非贪婪，最小方式匹配 *	   
+??	非贪婪，最小方式匹配 ?	  
+
+
+分组与捕获   
+( )  捕获分组   
+(?: )  非捕获分组  
+\1, \2   引用分组   
+
+
+特殊转义  
+\\  匹配字面的反斜杠  
+\|  或操作   
+
+
+字符集[]
+[aeiou] 匹配任意元音字母  
+[^aeiou] 匹配任意非元音字母  
+[a-z]  匹配小写字母  
+[0-9A-F]  匹配十六进制字符   
+[\u4e00-\u9fa5]  匹配中文
+
+标志  
+re.I  忽略大小写  
+re.M  多行模式（影响^和$)  
+re.S  让.匹配换行符  
+re.L  使预定字符类 \w \W \b \B \s \S 取决于当前区域设定  
+re.U  使预定字符类 \w \W \b \B \s \S \d \D 取决于unicode定义的字符属性  
+re.X  详细模式。这个模式下正则表达式可以是多行，忽略空白字符，并可以加入注释。以下两个正则表达式是等价的  
+
+
+\w,+?的使用例子  
+re.search(r"\w+?@\w+?.com","mofan@mofanpy.com")  
+
+
+\d,{}的使用例子  
+re.search(r"138\d{8}","13812345678")
+re.search(r"138\d{8}","1234567890000")  
+
+
+?,.*的使用例子
+re.search(r"不？爱","我不爱你)
+re.search(r"不？爱","我爱你")
+re.search(r"不.*?爱","我不是很爱你")
+
+
+正则表达式  
+re.search()	扫描查找整个字符串，找到第一个模式匹配的  
+
+
+re.match()	 从字符的最开头匹配，找到第一个模式匹配的即使用 re.M 多行匹配，也是从最最开头开始匹配	  
+
+
+re.findall()	返回一个不重复的 pattern 的匹配列表	  
+
+
+re.finditer()	和 findall 一样，只是用迭代器的方式使用	  
+
+
+re.split()	用正则分开字符串  
+
+
+re.sub()	用正则替换字符  
+
+
+re.subn()	和 sub 一样，额外返回一个替代次数   
+
+
+group的使用例子  
+只要我们在正则表达中，加入一个 () 选定要截取返回的位置， 他就直接返回括号里的内容。  
+string = "I have 2021-02-01.jpg, 2021-02-02.jpg, 2021-02-03.jpg"  
+print("without ():", re.findall(r"[\w-]+?\.jpg", string))  
+print("with ():", re.findall(r"([\w-]+?)\.jpg", string))  
+
+
+那如果我想获取更详细的信息呢？比如年月日分开获取？答案是多做几个括号就好了，然后用 group 功能获取到不同括号中匹配到的字符串。  
+string = "I have 2021-02-01.jpg, 2021-02-02.jpg, 2021-02-03.jpg"  
+match = re.finditer(r"(\d+?)-(\d+?)-(\d+?)\.jpg", string)  
+for file in match:   
+    print("matched string:", file.group(0), ",year:", file.group(1), ", month:", file.group(2), ", day:", file.group(3))    
+此中的group(0)指的是匹配到的完整的字符串  
+
+
+下面这个 findall 也可以达到同样的目的。只是它没有提供 file.group(0) 这种全匹配的信息。  
+string = "I have 2021-02-01.jpg, 2021-02-02.jpg, 2021-02-03.jpg"  
+match = re.findall(r"(\d+?)-(\d+?)-(\d+?)\.jpg", string)  
+for file in match:  
+    print("year:", file[0], ", month:", file[1], ", day:", file[2])  
+此函数不提供group(0)  
+
+
+有时候我们 group 的信息太多了，括号写得太多，让人眼花缭乱怎么办？我们还能用一个名字来索引匹配好的字段， 然后用 group("索引") 的方式获取到对应的片段。注意，上面方案中的 findall 不提供名字索引的方法，也就是说findall只能用数字索引，我们可以用 search 或者 finditer 来调用 group 方法。为了索引，我们需要在括号中写上 **?P<索引名>** 这种模式。  
+string = "I have 2021-02-01.jpg, 2021-02-02.jpg, 2021-02-03.jpg"  
+match = re.finditer(r"(?P<y>\d+?)-(?P<m>\d+?)-(?P<d>\d+?)\.jpg", string)  
+for file in match:  
+    print("matched string:", file.group(0),   
+        ", year:", file.group("y"),   
+        ", month:", file.group("m"),   
+        ", day:", file.group("d"))  
 
 
 
@@ -523,18 +698,6 @@ os.path.join  拼接路径
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-pickle/json序列化  
+# pickle/json序列化  
 控制异常try—except  
 单元测试  
